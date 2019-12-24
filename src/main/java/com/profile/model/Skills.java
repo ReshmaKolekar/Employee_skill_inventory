@@ -2,14 +2,15 @@ package com.profile.model;
 
 public class Skills {
 
-	private int skillid, experiance;
+	private int skillid;
+	float experiance;
 	private String skillName;
 
 	public Skills() {
 		super();
 	}
 
-	public Skills(int skillid, String skillName, int experiance) {
+	public Skills(int skillid, String skillName, float experiance) {
 		super();
 		this.skillid = skillid;
 		this.skillName = skillName;
@@ -31,11 +32,11 @@ public class Skills {
 		this.skillName = skillName;
 	}
 
-	public int getExperiance() {
+	public float getExperiance() {
 		return experiance;
 	}
 
-	public void setExperiance(int experiance) {
+	public void setExperiance(float experiance) {
 		this.experiance = experiance;
 	}
 

@@ -1,6 +1,7 @@
 package com.profile.Resource;
 
 import java.io.IOException;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,12 +36,15 @@ import com.profile.service.EmployeeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import javax.validation.*;
+
 @RestController
 @RequestMapping("/rest/Employee")
 @Api(value = "Employee Resource ", description = "Employee data Management")
 public class EmployeeController {
 
-	//private static final Logger logger = LogManager.getLogger(EmployeeController.class);
+	// private static final Logger logger =
+	// LogManager.getLogger(EmployeeController.class);
 
 	@Autowired
 	EmployeeReo employeeReo;
@@ -58,22 +62,22 @@ public class EmployeeController {
 
 	@ApiOperation(value = "Register the user ")
 	@PostMapping("/createemployee")
-	public String createUser(@RequestBody Employee employee, HttpServletRequest req) {
-
-	//	logger.debug("inside create user");
-		return employeeService.save(employee);
-
+	public @Valid EmployeeDto createUser(@Valid @RequestBody EmployeeDto employee, HttpServletRequest req) {
+		//return employeeService.save(employee);
+		return employeeReo.save(employee);
+		
 	}
 
 	@ApiOperation(value = "Authenticate the user ")
 	@PostMapping("/login")
 	public String authenticate(@RequestBody Employee employee, HttpServletRequest req) throws IOException {
 
-		//logger.info("request URI :" + req.getRequestURL() + "req headers :" + req.getMethod());
+		// logger.info("request URI :" + req.getRequestURL() + "req headers :" +
+		// req.getMethod());
 
-		//ObjectMapper om = new ObjectMapper();
+		// ObjectMapper om = new ObjectMapper();
 
-		//Employee employeeBody = om.readValue(req.getReader(), Employee.class);
+		// Employee employeeBody = om.readValue(req.getReader(), Employee.class);
 
 		return employeeService.authenticate(employee);
 
@@ -88,11 +92,11 @@ public class EmployeeController {
 
 	@ApiOperation(value = "Save user skills ")
 	@PostMapping("/addEmpskill/{id}")
-	public ResponseEntity<List<EmpSkillDto>> addEmpskill(@PathVariable(value = "id") int id,
+	public ResponseEntity<EmployeeDto> addEmpskill(@PathVariable(value = "id") int id,
 			@RequestBody SkillList skillList) {
 
-		List<EmpSkillDto> empSkillDtoList = employeeService.addEmpskill(id, skillList);
-		return ResponseEntity.ok().body(empSkillDtoList);
+		EmployeeDto employee = employeeService.addEmpskill(id, skillList);
+		return ResponseEntity.ok().body(employee);
 
 	}
 
@@ -141,28 +145,28 @@ public class EmployeeController {
 	// update multiple Skills
 	@ApiOperation(value = "Update multiple skills ")
 	@PutMapping("/update/empskills/{id}")
-	public ResponseEntity<String> updateEmpSkills(@PathVariable(value = "id") int id,
+	public ResponseEntity<EmployeeDto> updateEmpSkills(@PathVariable(value = "id") int id,
 			@RequestBody SkillList skillList) {
 
-		String response = employeeService.updateEmpSkillSet(id, skillList);
-		if (response.equalsIgnoreCase("success")) {
-			return ResponseEntity.ok().body("skill updated successfully");
-		} else {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Failure while updating skill");
-		}
-
+		EmployeeDto response = employeeService.updateEmpSkillSet(id, skillList);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@ApiOperation(value = "Delete Employee Skill mapping data ")
-	@DeleteMapping("/delete/empSkill/{id}")
-	public ResponseEntity<String> deleteEmpSkillData(@PathVariable(value = "id") int id) {
+	@DeleteMapping("/delete/empSkill/{empid}/{skillid}")
+	public ResponseEntity<?> deleteEmpSkillData(@PathVariable(value = "empid") int empid,
+			@PathVariable(value = "skillid") int skillid) {
 
-		String response = employeeService.deleteEmpSkillData(id);
-		if (response.equalsIgnoreCase("success"))
-			return ResponseEntity.ok().body(response);
+		EmpSkillDto response = employeeService.deleteEmpSkillData(empid, skillid);
+		try {
+			if (response == null)
+				throw new RecordNotFoundException("Record not found with employee_id " + empid);
+		} catch (RecordNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
 
-		return ResponseEntity.notFound().build();
-
+		return ResponseEntity.ok()
+				.body("Mapping for employee: " + empid + " with Skillid : " + skillid + " is deleted");
 	}
 
 }

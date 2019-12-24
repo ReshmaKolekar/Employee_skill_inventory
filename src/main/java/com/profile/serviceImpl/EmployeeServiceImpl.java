@@ -76,8 +76,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		EmployeeDto employeeFromDB = employeeReo.findByEmail(emp.getEmail());
 		if (employeeFromDB == null) {
 			String response = iEmployeeDao.save(employee);
-			return "User registered successfully and " + sendMail(emp.getEmail(), response) + " to the user";
-			//return "success";
+
+			 //return "User registered successfully and " + sendMail(emp.getEmail(),response) + " to the user";
+			return "success";
+			
 		}
 
 		else {
@@ -137,7 +139,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public List<EmpSkillDto> addEmpskill(int id, SkillList skillList) {
+	public EmployeeDto addEmpskill(int id, SkillList skillList) {
 
 		List<EmpSkillDto> empSkillDtoList = new ArrayList<EmpSkillDto>();
 		for (Skills skill : skillList.getSkilllist()) {
@@ -154,7 +156,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 				empSkillRepo.save(skill);
 			}
 
-			return empSkillDtoList;
+			// return empSkillDtoList;
+
+			return employeeReo.findById(id);
 		}
 
 		else {
@@ -230,7 +234,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public String updateEmpSkillSet(int id, SkillList skillList) {
+	public EmployeeDto updateEmpSkillSet(int id, SkillList skillList) {
 		EmployeeDto employee = employeeReo.findById(id);
 		try {
 			for (Skills skillToBeupdatedWith : skillList.getSkilllist()) {
@@ -254,34 +258,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 				}
 
 			}
-			return "success";
+
 		}
 
 		catch (Exception e) {
 			e.printStackTrace();
-			return "failure";
 		}
+		return employeeReo.findById(id);
 	}
 
 	@Override
-	public String deleteEmpSkillData(int id) {
-		EmployeeDto employee = employeeReo.findById(id);
-		List<EmpSkillDto> empSkillTListToBedeleted = empSkillRepo.findByEmployee(employee);
-
-		try {
-			empSkillRepo.deleteAll(empSkillTListToBedeleted);
-			return "success";
-		}
-
-		catch (Exception e) {
-			if (empSkillTListToBedeleted == null)
-				return " Employee Skill mapping doesn't exist";
-			else {
-				e.printStackTrace();
-				return e.toString();
-			}
-
-		}
+	public EmpSkillDto deleteEmpSkillData(int empid, int skillid) {
+		
+		EmployeeDto employee = employeeReo.findById(empid);
+		EmpSkillDto empSkillDtoToBeDeleted = empSkillRepo.findByEmployeeAndSkillid(employee, skillid);
+		empSkillRepo.delete(empSkillDtoToBeDeleted);
+		return empSkillDtoToBeDeleted;
 	}
 
 }

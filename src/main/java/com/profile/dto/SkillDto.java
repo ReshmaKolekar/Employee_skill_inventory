@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Skills")
@@ -17,6 +19,7 @@ public class SkillDto {
 	@Column(name = "skillid")
 	private int skillid;
 
+	@NotBlank
 	@Column(name = "name")
 	private String skillName;
 

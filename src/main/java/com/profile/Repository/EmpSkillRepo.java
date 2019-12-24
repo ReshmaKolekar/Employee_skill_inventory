@@ -16,4 +16,6 @@ public interface EmpSkillRepo extends JpaRepository<EmpSkillDto, ID> {
 
 	List<EmpSkillDto> findByEmployee(EmployeeDto employee);
 
+	EmpSkillDto findByEmployeeAndSkillid(EmployeeDto employee, int skillid);
+
 }

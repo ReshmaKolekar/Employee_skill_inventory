@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,14 +23,15 @@ public class EmpSkillDto {
 	@Column(name = "id")
 	private int id;
 
-	@Column(name = "skillid")
+	@Column(name = "skillId")
 	private int skillid;
 
-	@Column(name = "name")
+	@Column(name = "skillName")
 	private String skillName;
 
+	//@NotBlank
 	@Column(name = "exp_in_year")
-	private int experiance;
+	private float experiance;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -38,15 +41,11 @@ public class EmpSkillDto {
 		super();
 	}
 
-	public EmpSkillDto(int skillid, String skillName, int experiance) {
+	public EmpSkillDto(int skillid, String skillName, @NotNull float experiance) {
 		super();
 		this.skillid = skillid;
 		this.skillName = skillName;
 		this.experiance = experiance;
-	}
-
-	public String getSkillName() {
-		return skillName;
 	}
 
 	public int getSkillid() {
@@ -57,15 +56,19 @@ public class EmpSkillDto {
 		this.skillid = skillid;
 	}
 
+	public String getSkillName() {
+		return skillName;
+	}
+
 	public void setSkillName(String skillName) {
 		this.skillName = skillName;
 	}
 
-	public int getExperiance() {
+	public float getExperiance() {
 		return experiance;
 	}
 
-	public void setExperiance(int experiance) {
+	public void setExperiance(float experiance) {
 		this.experiance = experiance;
 	}
 
@@ -77,12 +80,10 @@ public class EmpSkillDto {
 		this.employee = employee;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+	@Override
+	public String toString() {
+		return "EmpSkillDto [skillid=" + skillid + ", skillName=" + skillName + ", experiance=" + experiance
+				+ ", employee=" + employee + "]";
 	}
 
 }

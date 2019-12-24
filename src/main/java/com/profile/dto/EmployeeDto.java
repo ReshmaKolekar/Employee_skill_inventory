@@ -9,6 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "Employee")
@@ -19,24 +23,29 @@ public class EmployeeDto {
 	@Column(name = "id")
 	private int id;
 
+	@NotBlank
 	@Column(name = "first_name")
 	private String firstName;
 
+	@NotBlank
 	@Column(name = "last_name")
 	private String lastName;
 
+	@NotNull
+	//@Size
 	@Column(name = "contact_no")
 	private long contact;
 
+	@NotBlank
+	@Email
 	@Column(name = "email")
 	private String email;
 
+	@NotBlank
 	@Column(name = "password")
 	private String password;
 
-	// @OneToOne(cascade=CascadeType.ALL)
 	@OneToMany(mappedBy = "employee")
-	// @ManyToMany(cascade = CascadeType.ALL)
 
 	private List<EmpSkillDto> skill;
 

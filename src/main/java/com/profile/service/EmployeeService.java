@@ -16,7 +16,7 @@ public interface EmployeeService {
 
 	String sendMail(String to, String response);
 
-	List<EmpSkillDto> addEmpskill(int id, SkillList skillList);
+	EmployeeDto addEmpskill(int id, SkillList skillList);
 
 	List<EmployeeDto> getAllEmp();
 
@@ -28,8 +28,10 @@ public interface EmployeeService {
 
 	String authenticate(Employee employee);
 
-	String updateEmpSkillSet(int id, SkillList skillList);
+	EmployeeDto updateEmpSkillSet(int id, SkillList skillList);
 
-	String deleteEmpSkillData(int id);
+	EmpSkillDto deleteEmpSkillData(int id, int skillid);
+
+	
 
 }
